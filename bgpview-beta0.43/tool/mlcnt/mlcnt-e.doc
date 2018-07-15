@@ -1,0 +1,140 @@
+
+         The tool for counting of the number of received route 
+                 for each prefix lengths 'mlcnt.pl'
+
+          Copyright (C) 1998 Internet Initiative Japan Inc.
+                            7 December 1998
+
+
+1. Overview
+
+   This is a tool for making HTML file. It is described the number of
+   received routes for each prefix lengths. When it makes the HTML
+   file, it uses the prefix log file of 'BGPView'.
+   This tool makes itself log file. It is stored a result of this 
+   tool. Therefore, if you execute this tool at intervals, you can
+   get the status of the movement of BGP behavior.
+
+2. Usage
+
+2.1 Configuring parameters
+
+  Please configure following parameters in 'mlcnt.pl' as you like.
+
+  - Change the path for perl
+
+    Change the path name for perl in 1st line.
+
+  - Change the file name of the prefix log file name
+
+    Variable name : $LOGFILE
+       The file name of the prefix log file of the BGPView
+
+  - Change the log file name of 'mlcnt.pl'
+
+    Variable name : $STACKF1 / $STACKF2
+       The log file name of the 'mlcnt.pl'. it is used by 'mlcnt.pl'
+       itself.
+             $STACKF1 : Current log file name
+             $STACKF2 : Previous log file name (Back up)
+
+  - Change the HTML file name
+
+    Variable name : $HTMLFILE
+       The HTML file name which is output result by 'mlcnt.pl'.
+
+  - Change the HTML header
+
+    Variable name : @HEADER
+       The header of the HTML file. This variable is a array.
+
+  - Change the HTML footer
+
+    Variable name : @FOOTER
+       The footer of the HTML file. This variable is a array.
+
+  - Change the number of elements for describing in HTML file
+
+    Variable name : $VIEWCOUNT
+       This parameter specify the number of elements for describing
+       in the HTML file. If this tool is executed every 15 minutes,
+       and this parameter is specified 96, then this tool output the
+       HTML file including data during 24 hours.
+       This parameter effects the log file of 'mlcnt.pl'.
+
+  - Change the range of describing prefix length
+
+    Variable name : @PRRANGE
+       This is a array which have 2 elements. The 1st elements is
+       the shortest prefix length, and the 2nd elements is the
+       longest prefix length.
+       When this parameter specified, this tool output the data
+       from the shortest prefix length to the longest prefix length.
+       However, this parameter does not effect the log file of
+       'mlcnt.pl'.
+
+2.2 How to use?
+
+  'mlcnt.pl' which is executed by cron counts a number of prefixes and
+  it can be showing a status using WWW. This section explains a example.
+  it counts a number of prefixes for each prefix lengths in every 15
+  minutes.
+
+  Firstly, you should execute BGPView. Before that, you should configure
+  'PREFIXOUT' parameter as BGPView output a prefix log.
+
+  The log file, it is specified by 'PREFIXOUT' parameter, is refreshed
+  by 'USR1' signal to BGPView. the previous log file is renamed for
+  a back up log file. (See, BGPView's readme file) This document recommend
+  that 'mlcnt.pl' uses the back up log file for counting.
+  If you use the back up log file for counting, then you should configure
+  '$LOGFILE' will be set the back up log file name, and configure 
+  following for cron. 
+
+  0-59/15 * * * * kill -USR1 `cat /var/run/bgpview.pid`;/usr/local/bin/mlcnt.pl
+
+
+3. Distribution Policy
+
+  All files in the package includes following description.
+
+  #
+  # Copyright (c) 1998 Internet Initiative Japan Inc.
+  # All rights reserved. 
+  #
+  # Redistribution and use in source and binary forms, with or without
+  # modification, are permitted provided that the following conditions
+  # are met:
+  # 1. Redistributions of source code must retain the above copyright
+  #    notice, this list of conditions and the following disclaimer.
+  # 2. Redistribution with functional modification must include
+  #    prominent notice stating how and when and by whom it is
+  #    modified.
+  # 3. Redistributions in binary form have to be along with the source
+  #    code or documentation which include above copyright notice, this
+  #    list of conditions and the following disclaimer.
+  # 4. All commercial advertising materials mentioning features or use
+  #    of this software must display the following acknowledgment:
+  #      This product includes software developed by Internet
+  #      Initiative Japan Inc. 
+  #
+  # THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED
+  # WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  # OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  # DISCLAIMED.
+  #
+
+  As described in the notice, redistribution is allowed for any
+  purpose including commercial product as long as satisfying
+  above conditions.  Redistribution with modification is not
+  prohibited but we encourage everybody to share the improvement
+  for public.  We are happy to integrate contributions in
+  original release.  If you still want to distribute your own
+
+4. Author
+
+  Kuniaki Kondo
+  Internet Initiative Japan Inc.
+  E-mail: kuniaki@iij.ad.jp
+
+mlcnt-e.doc,v 1.1 2003/03/31 05:56:40 kuniaki Exp

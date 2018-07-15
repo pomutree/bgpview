@@ -1,0 +1,139 @@
+
+       Prefix Length別受信Prefix数グラフ化ツール makegraph.pl
+
+          Copyright (C) 1998 Internet Initiative Japan Inc.
+                           10 December 1998
+
+
+1. 概要
+
+    本ツールは、mlcnt.plで出力されるログ(mlcnt.doc参照)を利用し、その
+  ログより任意のPrefix Lengthの受信数をグラフ化するツールです。
+    mlcnt.plは、数値をHTML化するだけでイメージ的に捉えられないという
+  欠点をこのツールでおぎなうことができます。
+
+2. 本ツールの動作に必要なもの
+
+    makegraph.plでは、グラフ化するために２つの外部アプリケーションを利
+  用します。このため、以下に上げる２つのアプリケーションが無いと正常に
+  グラフ化できません。
+
+    ○gnuplot	: グラフ化ツール
+    ○ppmtogif	: gnuplotで作成されたpbmファイルをgifに変換するアプリ
+                  ケーション
+
+    以上のアプリケーションを利用に先立ちインストールしておいて下さい。
+
+3. 利用方法
+
+3.1 パラメータの設定
+
+    本ツールを利用する前に、makegraph.plの幾つかの設定を適宜変更する
+  必要があります。変更が必要なパラメータを以下に記述します。
+
+  ○perlのパスの指定
+
+    1行目のperlのパスを適宜変更して下さい。
+
+  ○gnuplotのパス設定
+
+    変数名 : $GNUPLOT
+    意  味 : アプリケーション"gnuplot"のパスを設定
+
+  ○ppmtogifのパス設定
+
+    変数名 : $PPMTOGIF
+    意  味 : アプリケーション"ppmtogif"のパスを設定
+
+  ○mlcnt.plのログファイルの設定
+
+    変数名 : $MLCNTLOG
+    意  味 : グラフ化するデータが入っているmlcnt.plのログファイルのフ
+             ァイル名を絶対パス指定で設定
+
+  ○データディレクトリの設定
+
+    変数名 : $DATADIR
+    意  味 : makegraph.plでは、データ作成のために幾つかのデータファイ
+             ルを作成します。これらのデータを作成できるテンポラリな
+             ディレクトリを設定します
+
+  ○出力GIFファイル名の設定
+
+    変数名 : $OUTGIF
+    意  味 : 最終的に作成されたGIFファイルを出力するファイルを絶対パ
+             スで指定します。
+
+  ○描画対象のPrefix Lengthの設定
+
+    変数名 : @updatepl / @withdrawpl
+    意  味 : @updateplには、描画対象とするUpdate PrefixのPrefix Length
+             の長さを、@withdrawplには、描画対象とすつWithdraw Prefix
+             のPrefix Lenghtの長さを設定します。
+             仮に、Withdrawの描画を望まない場合には、"@withdrawpl=();"
+             とすることで描画されません。
+
+
+2.2 実際の利用方法
+
+    makegraph.plは、必要に応じて実行することで任意の時間帯のUpdate /
+  WithdrawのPrefix数をグラフ化することができます。mlcnt.plと同期させ
+  て実行することにより、よりダイナミックなグラフを作成することが可能
+  です。
+
+    また、makegraph.plをmakegraph1.pl,makegraph2.plと複数複写して作成
+  し、それぞれ異るPrefix Lengthを設定することにより必要に応じたグラフ
+  の出力も可能になります。
+    たとえば、BGPのUpdateメッセージに含まれるUpdate PrefixとWithdraw
+  Prefixの数を比較した場合、一般的にWithdrawの数は、Updateの数に比べ
+  非常に少ないものとなることがおおいため、これらの情報を一つのグラフ
+  に描画した場合、そのスケールの違いからWithdrawのグラフが平坦になり
+  事実上なんの情報も得られないグラフとなることがあります。このような
+  場合には、makegraph.plを複数実行することによってグラフを分けて表示
+  することをお勧めします。
+
+3. Distribution Policy
+
+  All files in the package includes folowing description.
+
+  #
+  # Copyright (c) 1998 Internet Initiative Japan Inc.
+  # All rights reserved. 
+  #
+  # Redistribution and use in source and binary forms, with or without
+  # modification, are permitted provided that the following conditions
+  # are met:
+  # 1. Redistributions of source code must retain the above copyright
+  #    notice, this list of conditions and the following disclaimer.
+  # 2. Redistribution with functional modification must include
+  #    prominent notice stating how and when and by whom it is
+  #    modified.
+  # 3. Redistributions in binary form have to be along with the source
+  #    code or documentation which include above copyright notice, this
+  #    list of conditions and the following disclaimer.
+  # 4. All commercial advertising materials mentioning features or use
+  #    of this software must display the following acknowledgement:
+  #      This product includes software developed by Internet
+  #      Initiative Japan Inc. 
+  #
+  # THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED
+  # WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  # OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  # DISCLAIMED.
+  #
+
+  As described in the notice, redistribution is allowed for any
+  purpose including commercial product as long as satisfying
+  above conditions.  Redistribution with modification is not
+  prohibited but we encourage everybody to share the improvement
+  for public.  We are happy to integrate contributions in
+  original release.  If you still want to distribute your own
+
+4. 作者連絡先
+
+  近藤 邦昭
+  Internet Initiative Japan Inc.
+  E-mail: kuniaki@iij.ad.jp
+
+								以上
+makegraph.doc,v 1.1 2003/03/31 05:56:40 kuniaki Exp

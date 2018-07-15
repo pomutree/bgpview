@@ -1,0 +1,18 @@
+BGPView Dummy Route Annouce機能利用のコツ
+
+○PLAYBACK Modeでのコツ
+
+ - iBGPで受けた経路はiBGPで送信せよ。
+ - eBGPでうけた経路はeBGPで送信せよ。
+ - Next_HopがActiveでない経路は、送信後再配布されないのでBGP Neighbor
+   Addressを調整せよ。
+
+○Update/Withdraw Modeでのコツ
+
+ - eBGPでアナウンスせよ。
+
+----
+Update: 2003/02/03 K.Kondo
+
+
+

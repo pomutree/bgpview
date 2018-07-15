@@ -1,0 +1,385 @@
+BGPVIEW 変更履歴
+change.txt,v 1.6 2005/10/21 02:24:50 kuniaki Exp
+
+16 Mar. 1998 Alpha Version 0.01 
+ -試験的にリリース
+
+18 Mar. 1998 Alpha Version 0.02 
+ -ログ出力属性にUPDATTRを追加。
+  →UPDATEメッセージの属性出力を抑制できるように変更
+ -DEBUG出力の量を減らす。
+ -ログ出力の量を多少減らす。
+ -BGP Headerの読み込みを16Byte固定読み込みから、1Byteづつ読み込み16Byte連続
+  の0xFFを検出するようにした。
+ -KILLHUPシグナルにより、ログファイルを新しくするようにした。古いログは、フ
+  ァイル名を変更して保存する。
+
+20 Mar. 1998 Aplha Version 0.03
+ -CLUSTER_LISTとORIGINATOR_IDの２つのパス属性をログに出力できるようにした。
+  (Route Reflector対応)(18 Mar. 1998)
+ -直近のタイマの待ち時間を返すcheck_timer関数で、１秒の誤差がでるバグを修正。
+  (18 Mar. 1998)
+ -AS_PATHセグメントタイプにAS_CONFED_SETおよびAS_CONFED_SEQUENCEの２つの属
+  性を追加し、その属性を表示できるようにした。(Confederation対応)
+  ただし、AS_PATH自体の表示には変更はない。(19 Mar. 1998)
+
+23 Mar. 1998 Alpha Version 0.04
+ -UPDATEメッセージのログの属性表示部分の内容を１属性１行で表示するように変
+  更した。(20 Mar. 1998)
+ -AS_PATHセグメント属性に２つ以上のセグメントタイプが混入している場合に、
+  AS PATHが正常に表示されないバグを修正した。(20 Mar. 1998)
+
+27 Mar. 1998 Alpha Version 0.05
+ -AS PathをConfederationに対応した。AS_CONFED_SETおよびAS_CONFED_SEQUENCEで
+  受信されるAS_Pathは、そのPATHの両端を括弧で括り表示するようにした。
+  (24 Mar. 1998)
+ -ESTABLISH状態でリモート側からPeerを切断させると、bgpviewがアングアップす
+  るバグを修正した。(24 Mar. 1998)
+
+03 Apr. 1998 Alpha Version 0.06
+ -MRTGと連動して取得した統計情報をMRTGで表示可能とした。連動試験は行ってい
+  ない。詳しくは、mrtgout.docを参照。(30 Mar. 1998)
+ -パス属性のCOMMUNITIESをログに出力できるようにした。(Community List対応)
+  (2 Apr. 1998)
+ -ROUTE_INFO構造体の構成を変更し、構造体のサイズを小さくした。(2 Apr. 1998)
+ -ソフトウエアタイマのタイムアウトチェックに関するバグを修正した。
+  (2 Apr. 1998)
+
+17 Apr. 1998 Alpha Version 0.07
+ -/var/run/bgpview.pidに起動したBGPViewのプロセスIDを出力するようにした。
+  (15 Apr. 1998)
+ -各neighbor毎に受信したprefix,withdrawを別のログファイルに出力できるように
+  した。ログファイルはSIGUSR1によってリファイルできる。
+ -上記改造に伴い、configファイルにPREFIXOUT項目を追加した。パラメータには、
+  出力ファイル名を指定する。
+  (15 Apr. 1998)
+ -受信Prefixを検査するcheckprefix.plをパッケージに添付(17 Apr. 1998)
+
+1 Dec. 1998 Alpha Version 0.08
+ -prefix logの出力形式の変更を行った。出力情報として、next hopとAS PATHを追
+  加した。(20 Apr. 1998)
+ -BGPViewのシステムログをsyslogに出力する機能を追加した。
+  bgpview.cfgのSYSTEM_LOGの設定を@<Facilityname>とするとsyslogに出力する。
+  (1 Dec. 1998)
+
+26 Jan. 1999 Alpha Version 0.09
+ -Prefix Length別Prefix数カウントツールおよびグラフ化ツールをパッケージに
+  添付した。(10 Dec. 1998)
+ -bgpview.cfg読み込み時に、１行が256文字を越えると設定がおかしくなるバグを
+  修正した。(25 Jan. 1999)
+ -ダミー経路のアナウンスを行う機能を追加した。
+  ダミーの経路の情報は、defaultで/usr/local/etc/dummyroute.cfgより指定可能、
+  また、bgpview.cfgによって設定ファイルを指定することも可能。(26 Jan. 1999)
+
+12 March 1999 Alpha Version 0.10
+ -ダミー経路送出中に送出先Peerがダウン等によりFSMがESTABLISHから他の状態に
+  移行しても、Update Messageを送り続けてしまうバグを修正。(27 Jan 1999)
+ -SyslogのFacility指定にからみFreeBSD以外ではコンパイルできない不具合を修
+  正した。これに伴い、サポートするFacilityはlocal0〜local7に限定。
+  (12 Mar 1999)
+ -BGP Peerの接続先が存在しない、または、Socketの接続が切れた場合にBroken
+  PipeしてしまうBugを修正。(12 Mar 1999)
+
+19 March 1999 Alpha Version 0.11
+ -BGPView側がServer側となって、接続相手側からBGP Peerの接続要求があった場
+  合に、BGPViewが一部の条件を除きほとんど無条件で要求を拒否している不具合
+  を修正。(16 Mar 1999)
+ -ダミーのUpdate Messageにて、Withdrawを出力できるようにした。設定は基本的
+  にUpdate Prefixと同じだが、AS Pathは無視する。
+  (19 Mar 1999)
+
+26 March 1999 Alpha Version 0.12
+ -BGPViewのログにUPDATEDUMP属性を追加。UPDATEメッセージのマーカ、メッセー
+  ジサイズ、メッセージ種別の３フィールドを除く部分のメッセージがログファイ
+  ルにダンプ出力できるようにした。(25 Mar 1999)
+ -ダミー経路送出機能にPLAYBACK機能を追加。ダミー経路タイプをPLAYBACKに指定
+  し、ダンプファイルを指定することにより、任意のダミー経路を送出することが
+  可能になった。ダンプファイルは、BGPViewのログファイルの形式と同じであり、
+  ダンプファイルとしてこのログファイルを指定する事が可能。(26 Mar 1999)
+
+07 May 1999 Alpha Version 0.13
+ -LOG_ALL属性が指定されていても全てのログファイルにログが出力されないバグ
+  を修正した。(31 Mar 1999)
+ -BGPViewプロセス起動時にプロセスIDファイルが作成できずに初期化に失敗した
+  場合に、ログファイルのオープンおよびクローズ処理時にプロセスが異常終了し
+  てしまうバグを修正した。(31 Mar 1999)
+
+05 July 1999 Alpha Version 0.14
+ -mlcnt.plのバグ修正(28 June 1999)
+ -CVS repository 開始(5 July 1999)
+
+26 Aug. 1999 Alpha Version 0.15
+ -SunOS に対応した。(24 Aug. 1999)
+ -TCP session が成立していない相手にも Open Message を送ろうとしていたバグ
+  を修正した。(26 Aug. 1999)
+
+3 Feb. 2000 Alpha Version 0.16
+ -BGPView Shellのサポート(3 Feb. 2000)
+ -BGPViewの起動オプションに設定ファイル指定とバージョン表示をサポート
+  (3 Feb. 2000)
+ -BGPViewの起動設定ファイルのデフォルトを/usr/local/etc/bgpview.cfgに変更
+  (3 Feb. 2000)
+
+10 March 2000 Alpha Version 0.17
+ -BGPView起動時にBVSポートがbindできなくても、BGPViewの起動を続行していた
+  が、bindできない場合にはBGPViewを異常終了するようにした。(4 Feb. 2000)
+ -BVSのコマンドライン入力時に128文字(最大入力文字数)を越えて入力した場合
+  にCore Dumpするバグを修正した。(28 Feb. 2000)
+ -BGPのPeer毎にIdetifierアドレス、およびLocal AS番号を別々に設定できるよう
+  にした。省略時は、システム設定値をOpen Message送出時に選択する。
+  (28 Feb. 2000)
+ -BVSのAuto Completeにおいてパラメータ入力時に<TAB>で補間しようとした場合
+  に、内部パラメータが表示されてしまうバグを修正した。(10 Mar. 2000)
+ -特定BGP Peerに任意のPrefixをInjectionし、そのPrefixの戻り時間を計測する
+  機能を追加した。(10 Mar. 2000)
+
+28 March 2000 Alpha Version 0.18
+ -Prefix Checker(checkprefix.pl)で出力するレポートの年号の2000年問題を修正
+  した。(15 Mar. 2000)
+ -BGPのPeerのステータスがIDLEおよびESTABLISHEDに変化した時に、設定ファイル
+  で指定したメールアドレスにNotificationメールを送付する機能を追加した。
+  (28 Mar. 2000)
+
+25 April 2000 Alpha Version 0.19
+ -システム設定のsendmailコマンドパス、管理者アドレス、および通知アドレスを
+  BVSのshow versionコマンドで表示するようにしました。(29 Mar. 2000)
+ -矢印キーなどで発行されるエスケープシーケンスによるヒストリ表示に対応した。
+  (18 April 2000)
+ -Peer状態変化通知メールの内容に対象Peer番号が表示されていないBugを修正し
+  た。同時に、通知元BGPViewが特定できるようメールにLocal Identifierの記述
+  を追加した。(18 April 2000)
+ -BVSの行エディット機能を強化し、カーソル一文字戻り／送り、および行中での
+  文字削除等をサポートした。これに伴い、コマンドバッファ関連のコードを大幅
+  改造した。(25 April 2000)
+
+
+19 July 2000 Alpha Version 0.20
+ -Ctrl+Lによる画面クリアの機能を追加した。(エスケープシーケンスによる)
+  (26 April 2000)
+ -Imcompleteなコマンドはヒストリに残らないようにした。
+  (26 April 2000)
+ -Ctrl-Uを行中で実行した場合、コマンドラインの表示が乱れるバグを修正した。
+  (26 April 2000)
+ -BVSからshutdownコマンド投入しBGPViewを終了後、その直後にBGPViewを再立ち
+  上げすると、BVSのサーバポートがbindできずに終了してしまう不具合を修正。
+  (26 April 2000)
+ -BVSにrebootコマンドを追加した。(26 April 2000)
+ -'do reflesh sytemlog'コマンドを'do reflesh systemlog'に変更した。
+  (11 Jul 2000)
+ -BVSログイン時にBGPViewのバージョンを表示するようにした。(12 Jul 2000)
+ -RADIX Treeを実装した。これに伴い、受信した経路を保存できるようにした。
+  (19 Jul 2000)
+ -受信した経路情報の全てを参照できるようにした。(19 Jul 2000)
+
+24 July 2000 Alpha Version 0.21
+ -'show ip bgp neighbor <ADDRESS> routes'コマンドを追加し、指定Peerから受
+  信した経路を参照できるようにした。(19 Jul 2000)
+ -'show ip bgp'および'show ip bgp neighbor <ADDRESS> routes'で表示される
+  経路表示の経過時間の表示方法を変更した。(19 Jul 2000)
+ -'show ip bgp <ADDRESS>'コマンドを追加し、指定の経路を表示できるようにし
+  た。(24 Jul 2000)
+ -RADIX Treeのデータ構造を変更した。(24 Jul 2000)
+
+3 August 2000 Alpha Version 0.22
+ -'do output route filename <FileName>'コマンドを追加し、BGPViewで持って
+  いる経路を全て指定のファイルに出力するようにした。(28 Jul 2000)
+ -RADIX Treeの経路削除処理でのメモリリークを修正した。(31 Jul 2000)
+ -PeerのsocketがオープンされていないPeerに対して、'clear ip bgp xxx'を行
+  うと、core dumpするバグを修正した。(31 Jul 2000)
+ -'show ip bgp summary'コマンドで、経路表のサマリを表示するようにした。
+  (31 Jul 2000)
+ -'show ip route summary'コマンドを追加した。これにより、受信した経路の
+  Prefix長別の経路数、および、平均のAS Path長が見れるようにした。
+  (1 Aug 2000)
+ -BVSコマンドラインで'?'の入力よって表示されるヘルプのうち、実行可能なコ
+  マンドの場合でもヘルプを表示するようにした。(1 Aug 2000)
+ -BVSコマンドラインの変数入力部分でオートコンプリート機能がうまく動作し
+  ない不具合を修正した。(3 Aug 2000)
+
+14 November 2000 Alpha Version 0.23
+ -'show version'コマンドでシステムの稼働経過時間を表示するようにした。
+  (11 Aug 2000)
+ -経路検索、経路集計系の一部のコマンドにおいて、複数のVTYから同時に同一
+  のコマンドを実行した場合に経路および集計の結果がおかしくなるバグを修正
+  した。(11 Aug 2000)
+ -コマンドなどで指定される出力ファイルの出力先のデフォルトディレクトリ
+  の指定を設定ファイルでできるようにした。(17 Aug 2000)
+ -'show ip bgp route time <Time> [ge|le]'コマンドを追加し、指定時間に受
+  信した経路を表示することができるようにした。(14 Nov 2000)
+
+26 March 2001 Alpha Version 0.24
+ -ダミー経路送付機能にAS Pathを各Update Message毎に変化させる機能を追加
+  した。(26 March 2001)
+
+29 March 2001 Alpha Version 0.25
+ -toolに経路数をIPアドレスの第一オクテット毎に数えるsumroute.plを追加し
+  た。(27 March 2001)
+ -"do reflesh prefixlog"コマンドでPrefix Logを更新する際、ファイルの最初
+  に、更新時にBGPViewが持っているRadix Treeの経路数等を出力するオプショ
+  ンを追加した。オプションの指定はbgpview.cfg内のPREFIXOUTSUMで指定する。
+  (27 March 2001)
+ -経路情報にUpdateおよびWithdrawの時刻を保持するようにした。これに伴い
+  Withdrawされた経路でもInactiveフラグを付けた状態で経路のエントリを残
+  すようにした。(28 March 2001)
+ -経路情報の更新時刻履歴を一定間隔毎に消去するタイマを追加した。
+  (28 March 2001)
+ -コマンドラインより経路情報の更新時刻履歴を消去するコマンドを追加した。
+  (28 March 2001)
+ -"set route history clear time"コマンドを追加し、次回の経路情報更新履歴
+  を消去する時間を指定できるようにした。(29 March 2001)
+ -"show ip bgp"での経路表示機能にactive route/inactive routeの表示選択オ
+  プションを追加した。(29 March 2001)
+ -"do output route filename"コマンドに、active/inactiveの表示経路選択オ
+  プションおよび、経路情報更新履歴表示オプションを追加した。
+  (29 March 2001)
+
+4 April 2001 Alpha Version 0.26
+ -Cronライクな時間指定によってコマンドをBGPView Shellコマンドを起動する
+  機能を追加した(2 April 2001)
+ -"do read cron file"コマンドを追加し、Cron設定ファイルをコマンドライン
+  から読み込めるようにした。(2 April 2001)
+ -"show cron list"コマンドを追加し、現在設定されているCronの状態を表示
+  するようにした。(2 April 2001)
+ -'bgpview.cfg'ファイルで更新時刻履歴タイマを0に設定すると、動作しなく
+  なるようにした。(2 April 2001)
+ -経路更新時刻履歴の表示を経過時間から、更新された日時の表示に変更した。
+  (3 April 2001)
+ -経路更新時刻履歴情報を元に経路のUpdateなどの状態をサマリするツールを
+  添付した。(4 April 2001)
+ 
+30 July 2001 Alpha Version 0.27
+ -Cronのチェックが起動時刻から換算して60秒ごとに起動するのを、毎分0秒に
+  起動するように変更した。(5 April 2001)
+ -Cronを利用して'do read cron file'コマンドを実行した場合、同時刻に起動
+  させるべき他のコマンドが実行しないバグを修正した。(5 April 2001)
+ -経路情報更新履歴として、最初に経路を受け取った時刻を記録するようにし
+  た。(19 April 2001)
+ -BGPView ShellのコマンドラインでCtrl-dを押下したとき、コマンドラインの
+  表示が乱れるバグを修正した。(27 April 2001)
+ -BGPView ShellにCtrl-kでカーソル以降の文字を消去する機能を追加した。
+  (27 April 2001)
+ -SIGTERM受信時にも、正常終了するようにした。(6 July 2001)
+ -"show ip nexthop summary"コマンドを追加し、Next Hop毎にどれだけの経路
+  数があるかを集計できるようにした。(30 Jul. 2001)
+
+2 August 2001 Alpha Version 0.28
+ -RedHat Linuxでコンパイルできないとレポートがあり、ヘッダファイルの
+  インクルードを調整した。(2 Aug. 2001)
+ -"show ip nexthop summary"コマンドを実行するとCore Dumpするバグを修正
+  (2 Aug. 2001)
+
+5 September 2001 Alpha Version 0.29
+ -"show ip nexthop summary neighbor <ADDR>"コマンドを追加し、Next Hop
+  SummaryをNeighbor別に見れるようにした。(13 Aug 2001)
+ -BGPView起動時に"-d"オプションをつけることにより、デーモンで起動できる
+  ようにした。(13 Aug 2001)
+ -"show ip bgp <active/inactive> detail"コマンドを追加し、コマンドライ
+  ン上でも経路の詳細が見れるようにした。(14 Aug 2001)
+ -"do output route filename"コマンド群にneighborを指定して経路を出力で
+  きる機能を追加した。(14 Aug 2001)
+ -'-DRTHISTORY'コンパイルオプションが指定されていない時に、リンクエラー
+  が出るBugを修正した。(15 Aug 2001)
+ -BGPView Shellで、無入力でリターンキーを押下した場合にコマンド未確定
+  とエラーが出る表示を出ないように変更した。(24 Aug 2001)
+ -BGPView Shellで、エラーでコマンドを入力した場合でもコマンドヒストリー
+  にそのコマンドが残るようにしたい。(24 Aug 2001)
+ -BGPView Shellで、コマンドラインに最大文字以上の文字を入力した時にCore
+  DumpするBugをFIXした。(5 Sep 2001)
+ -BGPViewにログインした時の記録をログに残すようにした。(5 Sep 2001)
+ -BGPView Shellで入力されたコマンドをログに残すようにした。(5 Sep 2001)
+
+27 September 2001 Alpha Version 0.30
+ -BGPViewのPeer個別の設定において、Descriptionと管理者E-Mailアドレスを
+  登録できるようにした。(10 Sep. 2001)
+ -BGPViewの設定ファイルであるbgpview.cfgのShell Passwordを暗号化した。
+  (14 Sep 2001)
+ -Peerの状態通知のOFF/ONをshow ip bgp neighborコマンドで見れるようにし
+  た。(14 Sep 2001)
+ -Peerの状態通知のOFF/ONをBGPView Shellから変更できるようにした。
+  (14 Sep 2001)
+ -Updateメッセージ中のAttribute Lengthが1オクテットで128オクテット以上を
+  指定された場合に正しくオクテット長を認識できないBugを修正した。
+  (16 Sep 2001)
+ -経路情報の構造体にあるAS Pathを固定長から可変長の変数に変更した。
+  (16 Sep 2001)
+ -メモリアロケーションエラー等でBGPViewが終了する際、可能な範囲で、メー
+  ルで通知の上、自動でリブートするようにした。(19 Sep 2001)
+ -BGPView Shellのコマンドエディタ機能として、カーソルを最後尾に移動させ
+  るCtrl-Eをサポートした。(25 Sep 2001)
+ -'set neighbor <addr> infolog <ON|OFF>'コマンドを新設し、Infomation
+  Logの出力の調整をできるようにした。(26 Sep 2001)
+ -'set neighbor <adrs> <disable|enable>'コマンドを新設し、BGPのPeerを
+  任意にダウンさせることができるようにした。(26 Sep 2001)
+ -BGPView設定ファイルにて、BGPView Shellのプロンプト文字列を変更できる
+  ようにした。(27 Sep 2001)
+
+31 January 2002 Alpha Version 0.31
+ -BGPViewが状態変更などの通知メールを送信した後、sendmailがZombieで残ら
+  ないように対処した。(1 Oct. 2001)
+ -'show version'コマンドを実施した際にCore DumpするBugを修正した。
+  Alpha Version 0.30でのenbug. (1 Oct 2001)
+ -Default Routeを受信した際にハングアップするBugを修正した。
+  (22 Oct 2001)
+ -RedHat Linux 7.1でコンパイル時にCryptでワーニングが出る部分を調整し
+  た(13 Nov 2001)
+ -'-f'オプションで起動する際、ファイル名を指定しないとcore dumpするバグ
+  を修正(13 Nov 2001)
+ -SolarisなどのSO_REUSEPORTが定義されていない機種でのコンパイルできない
+  問題を対処(31 Jan 2002)(Thanks Mukai)
+ -DEBUGでコンパイルした際に、一部OSで起動時にSegmentation Faultする問題
+  に対処した。(31 Jan 2002)
+
+1 April 2002 Alpha Version 0.32
+ -BGPViewでMPBGPをサポート。IPv6経路を受けられるようにした。
+  (1 April 2002)
+
+9 April 2002 Alpha Version 0.33
+ -MPBGPオプションでAFIにIPv4が指定されたばあいにUnknown AFIでPeerが張れ
+  ない問題に対処した。(Thanks mukai@omp.ad.jp)(2 April 2002)
+ -IPv6の経路をPrefix Logに出力するようにした。(9 April 2002)
+
+19 April 2002 Alpha Version 0.34
+ -IPv6 Radix Tableを実装、関連コマンドの一部も実装した。
+  (12 April 2002)
+ -BGPView Shellのコマンドパラメータでのアドレスフォーマットチェックに
+  問題があったバグを修正した。(19 April 2002)
+
+25 Sept. 2003 Alpha Version 0.35
+ -Updateメッセージ長とWithdraw情報フィールド長の長さに矛盾がある場合で
+  も経路をAcceptしていた不具合を修正した。(7 May 2002)
+ -IPv6の経路とIPv4の経路を同時に受けるような場合に、IPv6 Prefix length
+  too longというメッセージがでてハングアップするBugを修正した。
+  (29 March 2003)
+ -bgpview.cfgが無いときに起動するとCore Dumpするバグを修正
+  (29 Aug 2003)
+
+1 Mar 2004 Alpha Version 0.36
+ -BGPを接続する際に、まれに接続が完了できないPeerが発生するBugを修正した。
+  (1 Mar 2004)
+
+12 Oct 2005 Beta Version 0.37
+ - BGP Sessionの再接続を行う際、再接続タイマが固定の60秒だったものを
+   Neighbor毎の設定で可変にした。
+
+17 Nov 2005 Beta Version 0.38
+ - Delete configuration parameter 'KEEPALIVE'. It is calculated by 
+   Holdtimer.
+ - The bug, when a BGP peer is down, hold timer is cleard to system
+   default holdtimer value, not peer configured timer value, was fixed.
+ - Keepalive timer should be calcuted by reveived holdtimer, but Beta0.37
+   is not to do. The buf was fixed.
+ - The buf, Hold timer never expiered, was fixed.
+   Repored by Kurai-san and Igarashi-san(NTT-ME Xephion). Thanks.
+
+23 Feb 2006 Beta Version 0.38a
+ - BGPView was fixed some small bugs.
+ - The tool of 'mkrtimage' added. Thanks to Shuichi Okubo, Sakura Intenet.
+ 
+26 Jan 2007 Beta Version 0.39
+ - Fixed some Bugs
+ - Support IRR Checking
+
+23 Oct 2015 Beta Version 0.43
+ - Fixed bugs.
+ - Support AS-PLAIN format.
+ - AS_SET expression fixed.

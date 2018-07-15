@@ -1,0 +1,7 @@
+# Abuse Prefix Sample file
+# abuseprefix.dat.sample,v 1.1 2003/03/31 05:56:37 kuniaki Exp
+^[1-9]\.
+^10\.
+^172\.16\.
+^192\.168\.
+\/32

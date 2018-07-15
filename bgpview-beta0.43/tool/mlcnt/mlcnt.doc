@@ -1,0 +1,142 @@
+
+          Prefix Length別受信Prefix数カウントツール mlcnt.pl
+
+          Copyright (C) 1998 Internet Initiative Japan Inc.
+                            7 December 1998
+
+
+1. 概要
+
+    本ツールは、BGPViewで取得するPrefixログの形式のファイルを利用し、
+  そこに記録されているPrefixを各Prefix Length別に集計しHTML化します。
+  また、一度集計したものはmlcntのログファイルに記録され蓄積しますので、
+  定期的に動作させることによって、時間毎に受信しているPrefix Length別
+  の状況を把握できます。
+
+2. 利用方法
+
+2.1 パラメータの設定
+
+    本ツールを利用する前に、mlcnt.plの幾つかの設定を適宜変更する必要
+  があります。変更が必要なパラメータを以下に記述します。
+
+  ○perlのパスの指定
+
+    1行目のperlのパスを適宜変更して下さい。
+
+  ○Prefixログファイルの指定
+
+    変数名 : $LOGFILE
+    意  味 : BGPViewの解析対象とするPrefixログのファイル名
+
+  ○mlcnt.plログファイル名の指定
+
+    変数名 : $STACKF1 / $STACKF2
+    意  味 : mlcnt.pl自体が利用するログファイル名
+             $STACKF1は、カレントのログファイル名
+             $STACKF2は、一つ前のログファイル(バックアップ)名
+
+  ○出力HTMLファイル名の指定
+
+    変数名 : $HTMLFILE
+    意  味 : mlcnt.plが解析結果を出力するHTMLファイル名
+
+  ○HTMLヘッダ
+
+    変数名 : @HEADER
+    意  味 : HTMLへ出力する際のヘッダ部分の指定。配列になっており、任
+             意の要素数を設定可能。HTMLへの出力時は、配列番号が小さい
+             方からファイルに出力される。各要素を１行として利用すると
+             よい。
+
+  ○HTMLフッタ
+
+    変数名 : @FOOTER
+    意  味 : HTMLへ出力する際のフッタ部分の指定。形式はHTMLヘッダと同
+             じ。
+
+  ○HTML表示要素数の指定
+
+    変数名 : $VIEWCOUNT
+    意  味 : HTMLへ出力する際の出力要素数を指定する。15分間隔で解析し
+             ている場合、96を指定することにより２４時間分の表示が行え
+             る。この値は、mlcnt.plのログファイルに対しても有効であり、
+             ログファイルにはここで指定された数のログしか残らない。
+
+  ○表示Prefix Lengthの幅の指定
+
+    変数名 : @PRRANGE
+    意  味 : 要素数２の配列形式で、第一要素は最短Prefix Length、第二
+             要素は最長Prefix Lengthを意味する。この指定によりHTMLへ
+             出力する際に、表示Prefix Lengthを第一要素から第二要素ま
+             でに限定して出力できる。ただし、mlcnt.plのログファイル
+             には、この値は反映されず、常に全てのPrefix Lengthが出力
+             される。
+
+2.2 実際の利用方法
+
+    mlcnt.plは、定期的にcronなどで実行しPrefix数をカウントし、その状
+  況をWWWで参照できるようにすることを目的としています。ここでは、この
+  目的に沿って、１５分間隔でPrefix Length別のPrefix数のカウントを行う
+  ような設定の例を示します。
+
+    まず、BGPViewを設定し稼働させます。この際、Prefixログを出力するた
+  めの"PREFIXOUT"パラメータの指定を忘れずに行って下さい。
+
+    このPREFIXOUTで指定されたファイルは、BGPViewに対してUSR1シグナルを
+  送ることでリフレッシュされ、今までのログはバックアップファイルに移さ
+  れます。(BGPViewのREADME参照) mlcnt.plではこのバックアップファイルを
+  利用して集計する事をお勧めします。このため、mlcnt.plの$LOGFILE変数に
+  は、BGPViewで出力されるPrefixログのバックアップ側のファイル名を指定
+  し、以下のような設定をcronにすることで可能です。
+
+  0-59/15 * * * * kill -USR1 `cat /var/run/bgpview.pid`;/usr/local/bin/mlcnt.pl
+
+    こうすることにより、BGPViewにUSR1シグナルを送信し、Prefixログをリフ
+   レッシュした後にmlcnt.plを実行させることが可能です。
+
+3. Distribution Policy
+
+  All files in the package includes folowing description.
+
+  #
+  # Copyright (c) 1998 Internet Initiative Japan Inc.
+  # All rights reserved. 
+  #
+  # Redistribution and use in source and binary forms, with or without
+  # modification, are permitted provided that the following conditions
+  # are met:
+  # 1. Redistributions of source code must retain the above copyright
+  #    notice, this list of conditions and the following disclaimer.
+  # 2. Redistribution with functional modification must include
+  #    prominent notice stating how and when and by whom it is
+  #    modified.
+  # 3. Redistributions in binary form have to be along with the source
+  #    code or documentation which include above copyright notice, this
+  #    list of conditions and the following disclaimer.
+  # 4. All commercial advertising materials mentioning features or use
+  #    of this software must display the following acknowledgement:
+  #      This product includes software developed by Internet
+  #      Initiative Japan Inc. 
+  #
+  # THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED
+  # WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  # OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  # DISCLAIMED.
+  #
+
+  As described in the notice, redistribution is allowed for any
+  purpose including commercial product as long as satisfying
+  above conditions.  Redistribution with modification is not
+  prohibited but we encourage everybody to share the improvement
+  for public.  We are happy to integrate contributions in
+  original release.  If you still want to distribute your own
+
+4. 作者連絡先
+
+  近藤 邦昭
+  Internet Initiative Japan Inc.
+  E-mail: kuniaki@iij.ad.jp
+
+								以上
+mlcnt.doc,v 1.1 2003/03/31 05:56:40 kuniaki Exp

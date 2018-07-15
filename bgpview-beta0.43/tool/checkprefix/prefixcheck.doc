@@ -1,0 +1,97 @@
+                                                           17 Apr. 1998 
+                                                        Made By K.Kondo
+                                         Internet Initiative Japan Inc.
+
+                    BGPViewで受けたPrefixをチェックする
+
+1.概要
+
+  BGPViewのAlpha Version 0.07より、受信したUpdata/Withdraw Prefixだけを
+ファイルに出力する、Prefix Logging機能がつきました。これにより、受信した
+経路の中に不正な経路が存在していることをチェックし、異常があればメールで
+通知することが可能になりました。
+
+  prefixcheck.pl、check.shはこれらの機能を実現するための簡単なツール群で
+す。利用形態に合わせて改造して利用することをお勧めします。
+
+2.構成
+
+  prefixcheckは、BGPViewで出力されるprefix logが情報源となります。また、
+prefix logは、BGPViewにSIGUSR1シグナルを与える事でリスタートしますので、
+定期的にBGPViewにSIGUSR1を与える事に一定間隔で受信しているPrefixのリスト
+を得る事が可能です。
+
+  具体的には、添付のcheck.shをcronで定期的に起動します。check.shは、
+SIGUSR1をBGPViewに送信し、その後、リスタートしたPrefix logを解析して、
+abuseprefix.datに記述される「文字列」にマッチするprefixを検索し、マッチ
+すれば、それを特定のメールアドレスに送信します。
+
+3.利用方法
+
+3.1 checkprefix.pl
+
+  checkprefix.plは、perlのスクリプトです。利用に当たっては、ログファイル
+ディレクトリなどの適当なパラメータを変更する必要があります。
+
+  $ABUSEL	: チェックすべきPrefixの正規表現が書かれたファイル
+  $SUFFIX	: BGPViewにSIGUSR1を送信して、BGPViewがつくり出すPrefix
+                  log
+  $LOGDIR	: Prefix logが出力されているディレクトリ
+  $MAILCM	: sendmailコマンド
+  $TOADDR	: チェックに引っかかった時にその内容を送信すべきメールア
+                  ドレス
+  $FROMAD	: 送信するメールのFrom Address
+  $SUBJEC	: 送信するメールのSubject
+
+3.2 check.sh
+
+  check.shは、cronなどで定期的に起動するためのシェルスクリプトです。
+  スクリプト内にcheckprefix.plが存在するディレクトリが指定されていますの
+でその部分だけを変更して、以下の様にcrontab -eでcronをしていして下さい。
+
+0,10,20,30,40,50 * * * * /usr/local/bgpview/tool/checkprefix/check.sh
+
+3.3 注意
+
+  BGPViewがroot権限で起動されている場合、SIGUSR1シグナルもroot権限で行わ
+なくてはなりません。このため、cronはrootのものを利用した方が良いでしょう。
+
+4.Distribution Policy
+
+  All files in the package includes folowing description.
+
+  #
+  # Copyright (c) 1998 Internet Initiative Japan Inc.
+  # All rights reserved. 
+  #
+  # Redistribution and use in source and binary forms, with or without
+  # modification, are permitted provided that the following conditions
+  # are met:
+  # 1. Redistributions of source code must retain the above copyright
+  #    notice, this list of conditions and the following disclaimer.
+  # 2. Redistribution with functional modification must include
+  #    prominent notice stating how and when and by whom it is
+  #    modified.
+  # 3. Redistributions in binary form have to be along with the source
+  #    code or documentation which include above copyright notice, this
+  #    list of conditions and the following disclaimer.
+  # 4. All commercial advertising materials mentioning features or use
+  #    of this software must display the following acknowledgement:
+  #      This product includes software developed by Internet
+  #      Initiative Japan Inc. 
+  #
+  # THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED
+  # WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  # OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  # DISCLAIMED.
+  #
+
+  As described in the notice, redistribution is allowed for any
+  purpose including commercial product as long as satisfying
+  above conditions.  Redistribution with modification is not
+  prohibited but we encourage everybody to share the improvement
+  for public.  We are happy to integrate contributions in
+  original release.  If you still want to distribute your own
+
+                                                                    以上
+prefixcheck.doc,v 1.1 2003/03/31 05:56:37 kuniaki Exp

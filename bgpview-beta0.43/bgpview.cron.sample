@@ -1,0 +1,11 @@
+#
+# BGPView Sample Cron Configuration File
+# bgpview.cron.sample,v 1.1 2003/03/31 05:51:04 kuniaki Exp
+#
+# Format
+# min hour day mon year bgpview_command
+#
+# Example: BGPView exec 'do output route filename /usr/tmp/rt.txt'
+#          every 10 min.
+0,10,20,30,40,50 * * * * do output route filename /usr/tmp/rt.txt
+

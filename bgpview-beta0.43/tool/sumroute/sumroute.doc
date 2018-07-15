@@ -1,0 +1,88 @@
+
+                  Prefix Length Summarizer "sumroute.pl"
+
+            Copyright (C) 2001 Internet Initiative Japan Inc.
+                              27 March 2001
+
+1. 概要
+
+    本ツールは、BGPViewの"do output route filename"コマンドで出力され
+  るRoute Fileを解析し、指定されるPrefix長の経路の数をIP Addressの第一
+  オクテット毎にまとめて表示するツールです。
+
+2. 利用方法
+
+2.1 パラメータの設定
+
+    本ツールを利用する前に、sumroute.plの幾つかの設定を適宜変更する必
+  要があります。変更が必要なパラメータを以下に記述します。
+
+  ○Perlのパス指定
+
+    1行目のperlのパスを適宜変更してください。
+
+2.2 実際の利用方法
+
+    本ツールの実行には、解析対象となるBGPViewより取得したRoute File
+  が必要になります。
+    Route Fileは、BGPView Command Lineより、"do output route filename"
+  コマンドを実施する事により取得できます。コマンドの詳細については、
+  readme-bvs.txtを御覧ください。
+
+    Route Fileを取得したら次にsumroute.plを実行します。
+
+    sumroute.pl <Prefix Length> <File Name>
+
+    として実行してください。
+    このときのパラメータは以下の意味を持ちます。
+
+    <Prefix Length> : サマリしたいPrefix Lengthを 8〜32の間で指定しま
+                      す。
+    <File Name>     : BGPViewより取得したRoute Fileのファイル名を指定
+                      します。
+
+3. Distribution Policy
+
+  All files in the package includes folowing description.
+
+  #
+  # Copyright (c) 1998 Internet Initiative Japan Inc.
+  # All rights reserved. 
+  #
+  # Redistribution and use in source and binary forms, with or without
+  # modification, are permitted provided that the following conditions
+  # are met:
+  # 1. Redistributions of source code must retain the above copyright
+  #    notice, this list of conditions and the following disclaimer.
+  # 2. Redistribution with functional modification must include
+  #    prominent notice stating how and when and by whom it is
+  #    modified.
+  # 3. Redistributions in binary form have to be along with the source
+  #    code or documentation which include above copyright notice, this
+  #    list of conditions and the following disclaimer.
+  # 4. All commercial advertising materials mentioning features or use
+  #    of this software must display the following acknowledgement:
+  #      This product includes software developed by Internet
+  #      Initiative Japan Inc. 
+  #
+  # THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED
+  # WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  # OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  # DISCLAIMED.
+  #
+
+  As described in the notice, redistribution is allowed for any
+  purpose including commercial product as long as satisfying
+  above conditions.  Redistribution with modification is not
+  prohibited but we encourage everybody to share the improvement
+  for public.  We are happy to integrate contributions in
+  original release.  If you still want to distribute your own
+
+4. 作者連絡先
+
+  近藤 邦昭
+  Internet Initiative Japan Inc.
+  E-mail: kuniaki@iij.ad.jp
+
+                                                                以上
+sumroute.doc,v 1.1 2003/03/31 05:56:42 kuniaki Exp

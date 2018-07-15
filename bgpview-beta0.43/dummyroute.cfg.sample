@@ -1,0 +1,17 @@
+#
+#  BGPView Update Emulator Configuration Sample File
+#
+#  dummyroute.cfg.sample,v 1.1 2003/03/31 05:51:04 kuniaki Exp
+#
+NEIGHBOR	10.0.1.1
+STARTPREFIX	100.0.0.0
+NUMBEROF	10000
+PACK		40
+ASPATH		400_500_600
+# ASPATH	1.10_1.20
+TYPE		UPDATE
+# TYPE		WITHDRAW
+# TYPE		PLAYBACK
+ASTYPE		NORMAL
+# ASPATH		INCREMENTAL
+DUMPFILE	/log/bgpview-peer01.log

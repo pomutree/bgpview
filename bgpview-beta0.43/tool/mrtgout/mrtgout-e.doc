@@ -1,0 +1,92 @@
+                                                           27 Mar. 1998 
+                                                        Made By K.Kondo
+                                         Internet Initiative Japan Inc.
+
+                 Data Converting Tool for MRTG 'mrtgout.pl'
+
+1. Overview
+
+  This is a tool what it can output a data for MRTG based on the a log
+  file of BGPView.
+
+2. Installation
+
+  1. Firstly, you should install the MRTG.
+
+  2. You should configure parameters such as directories in 'mrtgout.pl'.
+
+3. Usage
+
+  mrtgout.pl [filename] [number of line] [function]
+
+  filename	: Specifying the filename of the Message Log.
+  number of line: Specifying the valid number of line form the bottom of
+                  specified file. When the file does not have specified
+                  number of lines or more, this tool counts all data.
+  function	: This parameter is available only 'ROUTE'.
+                  Following describes a kind of output data.
+                  1st line : the total number of prefixes
+                  2nd line : the total number of withdraw
+                  3rd line : empty
+                  4th line : the date of last data
+
+4. Configuration of the MRTG
+
+  Following is a sample of 'mrtg.cfg'
+
+
+
+Target[router]: `mrtgout.pl router.info 5 ROUTE`
+MaxBytes[router]: 10000
+Title[router]: router : HTTP
+Options[router]: absolute, bits, noinfo, nopercent, growright
+Legend1[router]: The Number of Prefix
+Legend2[router]: The Number of Withdraw
+YLegend[ezwf]: Message per 5 Min.
+ShortLegend[ezwf]: Msg/5min
+PageTop[router]: <H1>Router Receiving Prefix & Withdraw
+ </H1>
+ <TABLE>
+   <TR><TD>System:</TD><TD>router</TD></TR>
+   <TR><TD>Maintainer:</TD><TD>kuniaki@iij.ad.jp</TD></TR>
+   <TR><TD>Type:</TD><TD>the number of prefix and withdraw</TD></TR>
+  </TABLE>
+
+5.Distribution Policy
+
+  All files in the package includes following description.
+
+  #
+  # Copyright (c) 1998 Internet Initiative Japan Inc.
+  # All rights reserved. 
+  #
+  # Redistribution and use in source and binary forms, with or without
+  # modification, are permitted provided that the following conditions
+  # are met:
+  # 1. Redistributions of source code must retain the above copyright
+  #    notice, this list of conditions and the following disclaimer.
+  # 2. Redistribution with functional modification must include
+  #    prominent notice stating how and when and by whom it is
+  #    modified.
+  # 3. Redistributions in binary form have to be along with the source
+  #    code or documentation which include above copyright notice, this
+  #    list of conditions and the following disclaimer.
+  # 4. All commercial advertising materials mentioning features or use
+  #    of this software must display the following acknowledgment:
+  #      This product includes software developed by Internet
+  #      Initiative Japan Inc. 
+  #
+  # THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED
+  # WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  # OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  # DISCLAIMED.
+  #
+
+  As described in the notice, redistribution is allowed for any
+  purpose including commercial product as long as satisfying
+  above conditions.  Redistribution with modification is not
+  prohibited but we encourage everybody to share the improvement
+  for public.  We are happy to integrate contributions in
+  original release.  If you still want to distribute your own
+
+mrtgout-e.doc,v 1.1 2003/03/31 05:56:41 kuniaki Exp

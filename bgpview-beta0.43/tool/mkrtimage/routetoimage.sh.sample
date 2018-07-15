@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Copyrights (C) 2006 Kuniaki Kondo, Bugest-Network
+# All rights Reserved.
+# routetoimage.sh.sample,v 1.2 2006/02/21 02:33:33 kuniaki Exp
+
+ROUTEFILE_PREF='.txt'
+IMAGEFILE_PREF='.png'
+TMPRIBFILE='/tmp/shuichi-rib.txt'
+
+MKRIB_PL='./makerib.pl'
+COORD_PL='./coord.pl'
+MKIMAGE_PL='./mkimage.pl'
+
+$MKRIB_PL $1$ROUTEFILE_PREF > $TMPRIBFILE
+$COORD_PL $TMPRIBFILE | $MKIMAGE_PL > $1$IMAGEFILE_PREF

@@ -1,0 +1,181 @@
+                        経路更新履歴サマリツール
+                       cronrefresh.sh flapsum.pl
+
+           Copyright (C) 2001 Internet Initiative Japan Inc.
+                              4 April 2001
+
+1. 概要
+
+    このツール群は、BGPViewのdo outputコマンドで出力される経路の更新履
+  歴を解析し、そのサマリを表示するものです。
+    これに伴い、この解析を自動的に行うために必要なシェルスクリプトファ
+  イルとその利用方法に関する説明を行います。
+    この機能は、BGPView Alpha0.26以降で利用できます。
+
+2. スクリプト
+
+2.1 flapsum.pl
+
+    flapsum.plは、BGPViewのシェルコマンド'do output route filename'コマ
+  ンドのdetailオプション付きで出力されたファイルを解析し、総経路数や、
+  一定時間内に更新された経路数などをカウントして出力します。
+    出力されたファイルは、コマンドオプションとして指定します。
+
+    以下に出力される内容について解説します。
+
+
+    Total Route:
+      ファイル出力時点でBGPViewが保持している経路数を示します。示され
+      る経路数には、既にWithdrawされて無効となっている経路も含まれます。
+
+    Total Active Route:
+      上記Total routeで示される経路数の内、現在でも有効な経路数を示し
+      ます。
+
+    Total In-Active route:
+      上記Total routeで示される経路数の内、現在既にWithdrawされ無効と
+      なっている経路数を示します。
+
+    Stable Route:
+      上記Total Routeのうち、BGPViewが履歴を取り初めてから、もしくは、
+      clear route historyコマンドで履歴かクリアされてからUpdateメッセ
+      ージなどにより経路状態は変更されている経路数を示します。
+
+    In new route:
+      上記Stable routeのうちBGPViewが経路を受信してから24時間経過して
+      いない経路の数を示します。
+      ただし、BGPViewの再起動などによりPeerが再接続された場合は全ての
+      経路が24時間を経過していないことが考えられるため、その場合は、
+      経路数を0として示します。
+
+    Total Update Route:
+      Update/Withdrawを問わず、一度でも経路の状態が更新された経路の数
+      を示します。
+
+    Update Still Active:
+      上記Total Update Routeの内、引続き有効となっている経路数を示し
+      ます。
+
+    Total Update Times:
+      Prefixに対して行われたUpdateの総回数を示します。
+
+    Total Withdraw Times:
+      Prefixに対して行われたWithdrawの総回数を示します。
+
+    Total Changes:
+      上記Total Update TimesとTotal Withdraw Timesの合計になります。
+
+    Average:
+      UpdateもしくはWithdrawされた経路が平均何回のUpdate/Withdrawを
+      されているかを示します。
+      'Total Changes' / 'Total Updated Route'の結果と等価となります。
+
+    Updated routes for each prefix length:
+      Prefix長毎にUpdateされた経路数を示します。
+
+2.2 cronrefresh.sh
+
+    cronrefresh.shシェルスクリプトは、上記flapsum.plを毎日実施し、
+  その結果をメールで送付するための援助を行うためのサンプルです。
+
+    このサンプルスクリプトでは、以下のことを行います。
+
+    - BGPViewに与える、Cron定義ファイルの生成
+    - 出力結果をメールで送付するためのメールヘッダの生成
+    - flapsum.plを起動し、その結果をメールで送付するためのシェルスクリプ
+      トの生成
+
+    このサンプルスクリプトでは、動作を定義するための変数が多く定義され
+  ていますので、この変数を確実に設定しなおしてください。
+    以下に変数の説明を記述します。
+
+    CRONFILE:
+        BGPViewに与えるCronファイルのファイル名を絶対パスで定義します。
+
+    NEWFNAME:
+        BGPViewのdo output route filenameコマンドで出力するファイル名を
+        ディレクトリ無しで指定します。
+        格納先はROUTEDIRで定義されるディレクトリになります。
+
+    SUMFNAME:
+        flapsum.plで出力するファイル名をディレクトリ無しで指定します。
+        格納先はROUTEDIRで定義されるディレクトリになります。
+
+    ROUTEDIR:
+        上記ファイルを出力するディレクトリ名を指定します。
+
+    CMDDO:
+        do output route filenameコマンドを指定します。
+        NEWFNAMEおよびROUTEDIRを指定すれば通常変更する必要はありません。
+
+    FLAPSUM:
+        flapsum.plを指定します。
+
+    FLAPSUMSHELL:
+        flapsum.plを起動するためのシェルスクリプトの出力先を絶対パスで
+        指定します。
+
+    TEMPFILE:
+        メール送付用のヘッダなどを格納するためのテンポラリファイルを絶
+        対パスで指定します。
+
+    SENDMAIL:
+        sendmailコマンドを絶対パスで指定します。
+
+    SENDADDR:
+        flapsum.plの出力結果を送付するメールアドレスを指定します。複数
+        のアドレスを指定したい場合は','区切りで列挙します。
+
+3. 実際の利用方法
+
+    以下に、これらのツールを使って実際に定期的にflapsum.plを起動し、そ
+  の出力結果をメールで送付する方法について解説します。
+
+  1. bgpview.cfgの設定
+
+    bgpview.cfgのRTHISTORYCLRの値を0に設定し、BGPViewが自立的に経路履歴
+    をクリアする機能を無効にします。
+    履歴のクリアはbgpview.cronに記述するコマンドによって定義します。
+    設定が完了したらBGPViewを再起動します。設定変更の必要が無ければ、再
+    起動の必要はありません。
+
+  2. スクリプトの変更
+
+    上記解説にしたがってcronrefresh.shを変更します。
+
+  3. cronrefresh.shの実行
+
+    上記設定で確実に動くかどうかを確認するため、cronrefresh.shを実際に
+    実行します。
+    実行の結果、execflapsum.shとtemp.txtそして、bgpview.cronが出力され
+    まるので、その内容に間違いがないことを確認します。
+
+  4. BGPViewへのCronの設定
+
+    BGPViewシェルへアクセスし、do read cron fileコマンドを実行し、上記
+    によって作成されたbgpview.cronを読み込ませます。
+    この時点で、それまで設定されていたCronは消えますので注意してくださ
+    い。確認はshou cron listコマンドで行えます。
+
+  5. UNIXシステムのCRONの設定
+
+    crontab -eコマンドでcronrefresh.shおよびこれによって生成される
+    execflapsum.shシェルスクリプトの起動時間を設定します。
+    サンプルの設定では、cronrefresh.shはBGPViewの経路出力の後に実行され
+    ることを想定していますので、下記のような設定が考えられます。
+
+    15 0 * * * /usr/local/bin/execflapsum.sh
+    20 0 * * * /usr/local/bin/cronrefresh.sh
+
+    つまり、経路の出力コマンドをBGPViewが実施してから、BGPViewが再度
+    bgpview.cronを読み込むまでの間に少なくともcronrefresh.shを実行し
+    なければ、新しいbgpview.cronを正確に読み込んでくれません。
+
+  以上で設定は終了です。
+  BGPViewは通常root権限で稼働しますので、これらスクリプトもroot権限も
+  しくは適切な権限で動作する事が求められますのでUNIXシステムのcronの設
+  定を行う場合には注意が必要です。
+
+                                                                  以上
+---------+---------+---------+---------+---------+---------+---------+--
+historycheck.doc,v 1.1 2003/03/31 05:56:38 kuniaki Exp

@@ -1,0 +1,127 @@
+
+       The tool for making prefix count graph 'makegraph.pl'
+
+          Copyright (C) 1998 Internet Initiative Japan Inc.
+                           10 December 1998
+
+
+1. Overview
+
+  This is a tool set for drawing a graph which describes a number of
+  received prefixes using log file of the 'mlcnt.pl'.
+  the 'mlcnt.pl' makes only HTML file including numbers. This tool
+  improves it.
+
+2. Prerequisite
+
+  'makegraph.pl' needs the following applications. However, when the
+  gnuplot supports 'GIF' terminal, this does not need 'ppmtogif' if
+  you change a little bit in function 'drawgnuplot' in 'makegraph.pl'.
+
+    - gnuplot	: This is a tool for drawing a graph.
+    - ppmtogif	: This is a converter from pbm to gif.
+
+  Please install above applications before installing this tool.
+
+3. Usage
+
+3.1 Parameter Configuration in 'makegraph.pl'
+
+  Please configure following parameters in 'makegraph.pl' as you like.
+
+  - Change the path for perl
+
+    Change the path name for perl in 1st line.
+
+  - Change the path for gnuplot
+
+    Variable name : $GNUPLOT
+       The full path name of 'gnuplot'
+
+  - Change the path for ppmtogif
+
+    Variable name : $PPMTOGIF
+       The full path name of 'ppmtogif'
+
+  - Change the log file name of 'mlcnt.pl'
+
+    Variable name : $MLCNTLOG
+       The full path name of the log file of 'mlcnt.pl' 
+
+  - Change the directory name of data
+
+    Variable name : $DATADIR
+       The directory name of temporally data for 'makegraph.pl'
+
+  - Change the file name of output graphic file
+
+    Variable name : $OUTGIF
+       It is specified the file name of outputting graphic file
+       by full path name. 
+
+  - Specifying drawing prefix length
+
+    Variable name : @updatepl / @withdrawpl
+       '@updatepl' is specified the prefix length of update, and
+       '@withdrawpl' is specified the prefix length of withdrawn.
+       If you don't need to draw the withdraw data, then you should
+       configure '@withdrawpl=();'
+
+
+2.2 How to use?
+
+  'makegraph.pl' can draw specific time range of the number of 
+  update/withdraw prefixes, and it can draw the interactive graphs
+  if it synchronize with 'mlcnt.pl'.
+
+  If you make a file such as 'makegraph1.pl' and 'makegraph2.pl' by
+  copying 'makegraph.pl', then it can draw the graph which is specified
+  prefix length.
+  Generally, the number of withdraw is less than the number of update.
+  Therefore, in my recommendation, the withdraw graph and the update
+  graph should be separate to 2 other graphs.
+
+3. Distribution Policy
+
+  All files in the package includes following description.
+
+  #
+  # Copyright (c) 1998 Internet Initiative Japan Inc.
+  # All rights reserved. 
+  #
+  # Redistribution and use in source and binary forms, with or without
+  # modification, are permitted provided that the following conditions
+  # are met:
+  # 1. Redistributions of source code must retain the above copyright
+  #    notice, this list of conditions and the following disclaimer.
+  # 2. Redistribution with functional modification must include
+  #    prominent notice stating how and when and by whom it is
+  #    modified.
+  # 3. Redistributions in binary form have to be along with the source
+  #    code or documentation which include above copyright notice, this
+  #    list of conditions and the following disclaimer.
+  # 4. All commercial advertising materials mentioning features or use
+  #    of this software must display the following acknowledgment:
+  #      This product includes software developed by Internet
+  #      Initiative Japan Inc. 
+  #
+  # THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED
+  # WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  # OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  # DISCLAIMED.
+  #
+
+  As described in the notice, redistribution is allowed for any
+  purpose including commercial product as long as satisfying
+  above conditions.  Redistribution with modification is not
+  prohibited but we encourage everybody to share the improvement
+  for public.  We are happy to integrate contributions in
+  original release.  If you still want to distribute your own
+
+4. Author
+
+  Kuniaki Kondo
+  Internet Initiative Japan Inc.
+  E-mail: kuniaki@iij.ad.jp
+
+makegraph-e.doc,v 1.1 2003/03/31 05:56:40 kuniaki Exp

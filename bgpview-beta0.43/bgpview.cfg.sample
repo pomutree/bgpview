@@ -1,0 +1,101 @@
+#
+# BGP Protocol Viewer Configuration
+#
+# bgpview.cfg.sample,v 1.4 2005/04/27 07:43:43 kuniaki Exp
+#
+# Local Router Configuration
+#
+# Local Autonomous Number
+LOCAL_AS	100
+#
+# Router ID
+IDENTIFIER	10.0.0.1
+#
+# System Log
+SYSTEM_LOG	/log/bgpview.log
+#SYSTEM_LOG	@LOCAL7
+#
+# BGPView Shell Configuration
+SHELL_PORT	3000
+SHELL_MAXCON	4
+SHELL_PASSWD	bgpview::This_parameter_must_be_crypted_by_bvspasswd
+SHELL_MORE	24
+#
+# Route Change History Clearing Timer Interval
+RTHISTORYCLR	86400
+V6RTHISTORYCLR	0
+#
+SENDMAIL_CMD	/usr/sbin/sendmail
+ADMIN_ADDR	bgpview-admin@ate-mahoroba.jp
+NOTIFY_ADDR	maintener@ate-mahoroba.jp
+SPOOL_DIR	/tmp
+SYSNAME		BGPView
+#
+# Dummy Route Configuration File
+DUMMY_ROUTE_CFG	/usr/local/etc/dummyroute.cfg
+#
+# Cron Configuration File
+CRON		/usr/local/etc/bgpview.cron
+#
+# IRR Route Check
+#
+IRR_CHECK	ON
+IRR_HOST	localhost
+IRR_PORT	43
+#
+# NEIGHBOR Configration 1
+#
+NEIGHBOR
+	DESCRIPTION	Mahoroba_iBGP
+	ADDRESS		10.0.1.1
+	REMOTE_AS	100
+	IND_IDENT	10.0.0.2
+	IND_AS		65000
+	HOLD_TIMER	60
+	PEER_ADMIN	peermaint@ate-mahoroba.jp
+	VIEW		OPEN
+	VIEW		UPDATE
+	VIEW		UPDATTR
+	VIEW		UPDDATEDUMP
+	VIEW		NOTIFICATION
+	VIEW		KEEPALIVE
+	VIEW		SYSTEM
+	ANNOUNCE	ROUTE_DIFF
+	ANNOUNCE	STATUS_CHANGE
+	LOGNAME		/log/bgpview-peer01.log
+	INTERVAL_INFO	60
+	INFO		/log/bgpview-peer01.info
+	PREFIXOUT       /log/bgpview-peer01.prefix
+	PREFIXOUTSUM	ON
+	MD5PASS		hogehoge
+	RECONNECTWAIT	60
+############ IRR Check Parameters
+	IRRCOMPARE	ON
+	IRRNOTIFY	peermaint@ate-mahoroba.jp #until Support
+	IRRNOTELEVEL	3 #until Support
+############ 4Octet AS Support
+############ 4Octet Capability requires NLRI configuration
+	4OCTETS_AS	ON
+	NLRI		IPv4_UNICAST
+##
+# NEIGHBOR Configration 2
+#
+NEIGHBOR
+	ADDRESS		10.0.2.1
+	REMOTE_AS	200
+	IND_IDENT	10.0.0.3
+	IND_AS		65001
+	HOLD_TIMER	60
+	NLRI		IPv6_UNICAST
+	VIEW		OPEN
+	VIEW		UPDATE
+	VIEW		UPDATTR
+	VIEW		NOTIFICATION
+	VIEW		KEEPALIVE
+	VIEW		SYSTEM
+	ANNOUNCE	ROUTE_DIFF
+	LOGNAME		/log/bgpview-peer02.log
+	INTERVAL_INFO	60
+	INFO		/log/bgpview-peer02.info
+	PREFIXOUT       /log/bgpview-peer02.prefix
+	PREFIXOUTSUM	OFF
