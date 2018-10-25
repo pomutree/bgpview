@@ -240,13 +240,15 @@ void pr_update(int pn)
 	ROUTE_INFO	as4_getroute;
 	char		logstr[128];
 	prefix_t	outpre;
-	char		pathbuf[4096], as4_pathbuf[4096];
+	char		pathbuf[8192], as4_pathbuf[8192];
+	/* char		getroutpathbuf[8192]; */
 	int		pathbuflen, as4_pathbuflen;
 	int		ipv6updcnt, ipv6wdrcnt;
 	V6ROUTE_BUF	v6update, v6withdraw;
 	ROUTE_INFO_V6	v6getroute, v6prroute;
 	ROUTE_INFO_V6	as4_v6getroute;
 	V6ROUTE_LIST	*listbuf;
+	int		totalashops;
 
 	static char	*path_attr[] = {
 			/* 0 */ "UNKNOWN",
@@ -281,6 +283,10 @@ void pr_update(int pn)
 	message_dump(pn);
 	bzero(&getroute, sizeof(ROUTE_INFO));
 	bzero(&v6getroute, sizeof(ROUTE_INFO_V6));
+	/*
+	getroutpathbuf[0] = '\0';
+	getroute.pathset_ptr = &getroutpathbuf[0];
+	*/
 	
 	length = (int)buf2ushort(ptr);
 	le1 = length;
@@ -472,7 +478,15 @@ void pr_update(int pn)
 				ATRFL_SET(SET_PATHTYPE, v6getroute.attribute_flag);
 				ptmp = 0;
 				pathbuf[0] = '\0';
+				totalashops = 0;
 				while(ptmp < attr_octs) {
+			  	  /************* Tempolary *************/
+				  if (totalashops > 255) {
+	    pr_log(VLOG_UPDE, pn, "    Receive Very Long AS Path : Ignored\n", OFF);
+	    pr_log(VLOG_UPDE, pn, "===== UPDATE Information Done =====\n", ON);
+					return;
+				  }
+				  /************************************/
 				  strcpy(logstr, "    PATH Segment Type = ");
 				  getroute.path_type = *(ptr+ptmp);
 				  v6getroute.path_type = *(ptr+ptmp);
@@ -528,6 +542,7 @@ void pr_update(int pn)
 					default:
 				          strcat(cbuf, " ");
 				          strcat(pathbuf, cbuf);
+					  totalashops++;
 					  break;
 				      }
 				    }
@@ -543,6 +558,7 @@ void pr_update(int pn)
 					  sprintf(cbuf, "%d ",
 						(int)buf2ushort(cp));
 					  strcat(pathbuf, cbuf);
+					  totalashops++;
 					  break;
 				      }
 				    }
@@ -579,8 +595,10 @@ void pr_update(int pn)
 				} else {
 					getroute.pathset_ptr = &pathbuf[0];
 					v6getroute.pathset_ptr = &pathbuf[0];
+					/*
 					strcpy(getroute.pathset_ptr, pathbuf);
 					strcpy(v6getroute.pathset_ptr, pathbuf);
+					*/
 					sprintf(logstr, "    AS_Path = %s\n",
 								getroute.pathset_ptr);
 #ifdef DEBUG
@@ -810,7 +828,7 @@ void pr_update(int pn)
 						(int)buf2ushort(cp),
 						(int)buf2ushort(cp+2));
 					****/
-					sprintf(cbuf, "%lu,", 
+					sprintf(cbuf, "%lu ", 
 						(u_long)buf2ulong(cp));
 					strcat(as4_pathbuf, cbuf);
 					break;
@@ -844,8 +862,10 @@ void pr_update(int pn)
 				} else {
 					as4_getroute.pathset_ptr = &as4_pathbuf[0];
 					as4_v6getroute.pathset_ptr = &as4_pathbuf[0];
+					/*
 					strcpy(as4_getroute.pathset_ptr, as4_pathbuf);
 					strcpy(as4_v6getroute.pathset_ptr, as4_pathbuf);
+					*/
 					sprintf(logstr, "    AS4_Path = %s\n",
 					   	     as4_getroute.pathset_ptr);
 				}
@@ -861,6 +881,30 @@ void pr_update(int pn)
 			}
 		}
 	}
+	
+	sprintf(logstr, "    Received Total AS Hops = %d\n", totalashops);
+	pr_log(VLOG_UPDE, pn, logstr, OFF);
+
+	/*** Ignore Long AS Path Prefix ***/
+	/* if (totalashops > 255) { */
+	if (totalashops > 200) { /* Changed */
+	    pr_log(VLOG_UPDE, pn, "    Receive Very Long AS Path : Ignored\n", OFF);
+	    length = peer[pn].datalen - 4 - le1 - le2;
+	    sprintf(logstr,
+	    "    Network Layer Reachability Information Length = %d\n",length);
+	    pr_log(VLOG_UPDE, pn, logstr, OFF);
+	    pr_log(VLOG_UPDE, pn, "===== UPDATE Information Done =====\n", ON);
+	    return;
+	}
+
+
+
+#ifdef LPDEBUG
+	/*
+	sprintf(logstr, "PATHBUFLEN1 = %s\n", strlen(pathbuf));
+	pr_log(VLOG_UPDE, pn, logstr, OFF);
+	*/
+#endif
 
 	/* Network Layer Reachability Information Print */
 	/* length = peer[pn].datalen - 23 - le1 - le2; */
@@ -897,7 +941,21 @@ void pr_update(int pn)
 		memmove((u_char *)&prroute.prefix, (u_char *)(ptr+pt2+1), cnt);
 
 		if (prroute.pathset_ptr != NULL) {
+#ifdef LPDEBUG
+	sprintf(logstr, "PATHBUFLEN = %d\n", strlen(pathbuf));
+	pr_log(VLOG_UPDE, pn, logstr, OFF);
+#endif
+		    /*
+		    pathbuflen = 0;
+		    while( *(getroute.pathset_ptr+pathbuflen) != '\0' ) {
+			pathbuflen++;
+		    }
+		    */
+		    /*
 		    pathbuflen = strlen(getroute.pathset_ptr);
+		    */
+		    pathbuflen = strlen(pathbuf);
+
 		    if (pathbuflen != 0) {
 			prroute.pathset_ptr = (char *)malloc(pathbuflen+1);
 			if (prroute.pathset_ptr == NULL) {
@@ -909,7 +967,10 @@ void pr_update(int pn)
 			    return;
 			}
 		    }
+		    strcpy(prroute.pathset_ptr, pathbuf);
+		    /*
 		    strcpy(prroute.pathset_ptr, getroute.pathset_ptr);
+		    */
 		}
 
 		pr_route(&prroute, pn);

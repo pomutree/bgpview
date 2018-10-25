@@ -1,0 +1,9 @@
+MEMO
+
+- In update.c, It have "Long AS Path Bugs".
+  Tempolary, It is checking, if AS hops longer 200 or 255,
+  Update is ignored.
+  Please grep "Long".
+
+  Please Anybody fix it!
+
